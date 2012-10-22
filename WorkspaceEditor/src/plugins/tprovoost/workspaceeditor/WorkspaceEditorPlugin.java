@@ -105,7 +105,7 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 	private String minNamePlugin = "";
 
 	// -----------------
-	// IMAGES RESSOURCES
+	// IMAGES RESOURCES
 	// -----------------
 	private ImageIcon smallButton = new ImageIcon(getImageResource("plugins/tprovoost/workspaceeditor/images/sqBtnSmall.jpg"));
 	private ImageIcon mediumButton = new ImageIcon(getImageResource("plugins/tprovoost/workspaceeditor/images/sqBtnMedium.jpg"));
@@ -186,8 +186,7 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 				if (workspaceName.equals("sys"))
 					MessageDialog.showDialog("System file", "This file should not be modified. It is shown as an example only.");
 				else {
-					String response = JOptionPane.showInputDialog(Icy.getMainInterface().getMainFrame(),
-							"Enter the name of the new band: ", "Band Creation",
+					String response = JOptionPane.showInputDialog(Icy.getMainInterface().getMainFrame(), "Enter the name of the new band: ", "Band Creation",
 							JOptionPane.QUESTION_MESSAGE);
 					if (response == null)
 						return;
@@ -204,8 +203,7 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 
 			@Override
 			public void actionPerformed(ActionEvent actionevent) {
-				String response = JOptionPane.showInputDialog(Icy.getMainInterface().getMainFrame(), "Enter the name of the Workspace: ",
-						"Workspace Creation",
+				String response = JOptionPane.showInputDialog(Icy.getMainInterface().getMainFrame(), "Enter the name of the Workspace: ", "Workspace Creation",
 						JOptionPane.QUESTION_MESSAGE);
 				if (response == null)
 					return;
@@ -260,8 +258,7 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 					return;
 				if (currentWorkspace.getName().equals("sys")) {
 					MessageDialog.showDialog("Deletion error", "This item cannot be deleted");
-				} else if (ConfirmDialog.confirm("Deletion",
-						"Are you sure you want to delete this workspace? You will not be able to undo this operation.")) {
+				} else if (ConfirmDialog.confirm("Deletion", "Are you sure you want to delete this workspace? You will not be able to undo this operation.")) {
 					FileUtil.delete(currentWorkspace.getLocalFilename(), false);
 					loadWorkspace("sys");
 				}
@@ -281,8 +278,7 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 						currentWorkspace.setDescription(dlg.getWkDescription());
 						currentWorkspace.save();
 						boolean enableWorkspace = dlg.isWorkspaceEnabled();
-						if (enableWorkspace
-								&& (currentWorkspace.getTasks() == null || currentWorkspace.getTasks().get(0).getBands().isEmpty())) {
+						if (enableWorkspace && (currentWorkspace.getTasks() == null || currentWorkspace.getTasks().get(0).getBands().isEmpty())) {
 							MessageDialog.showDialog("Empty Workspace", "Impossible to enable an empty workspace.");
 						} else {
 							WorkspaceLocalPreferences.setWorkspaceEnable(currentName, enableWorkspace);
@@ -491,7 +487,7 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 			}
 		});
 		// add space in case there is a too big space below
-		for (;cpt <= 10; ++cpt) {
+		for (; cpt <= 10; ++cpt) {
 			panelButtonRefresh.add(new JLabel(""));
 		}
 		panelPluginsCenter.setLayout(new GridLayout(cpt + 2, 1));
@@ -589,9 +585,8 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 						if (e.getButton() == MouseEvent.BUTTON3) {
 							TitledPopupMenu popup = new TitledPopupMenu("Band: " + bandsCopy.get(finalBandIndex).getName());
 							Border titleUnderline = BorderFactory.createMatteBorder(1, 0, 0, 0, popup.getForeground());
-							TitledBorder labelBorder = BorderFactory.createTitledBorder(titleUnderline, popup.getLabel(),
-									TitledBorder.CENTER, TitledBorder.ABOVE_TOP, ppp
-											.getFont().deriveFont(Font.BOLD), popup.getForeground());
+							TitledBorder labelBorder = BorderFactory.createTitledBorder(titleUnderline, popup.getLabel(), TitledBorder.CENTER,
+									TitledBorder.ABOVE_TOP, ppp.getFont().deriveFont(Font.BOLD), popup.getForeground());
 							popup.setBorder(BorderFactory.createCompoundBorder(popup.getBorder(), labelBorder));
 							popup.setLocation(e.getLocationOnScreen());
 
@@ -607,8 +602,7 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 										return;
 									}
 									String response = (String) JOptionPane.showInputDialog(Icy.getMainInterface().getMainFrame(),
-											"Enter the name of the new band: ",
-											"Band Creation", JOptionPane.QUESTION_MESSAGE, null, null, band.getName());
+											"Enter the name of the new band: ", "Band Creation", JOptionPane.QUESTION_MESSAGE, null, null, band.getName());
 									if (response == null)
 										return;
 									HashMap<String, ArrayList<ItemDefinition>> hashmap = new HashMap<String, ArrayList<ItemDefinition>>();
@@ -730,8 +724,7 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 										task.removeBand(band);
 										currentWorkspace.save();
 										reloadWorkspace();
-										if (currentWorkspace.getTasks() == null
-												|| currentWorkspace.getTasks().get(0).getBands().size() <= 1) {
+										if (currentWorkspace.getTasks() == null || currentWorkspace.getTasks().get(0).getBands().size() <= 1) {
 											WorkspaceLocalPreferences.setWorkspaceEnable(currentWorkspace.getName(), false);
 										}
 									}
@@ -848,15 +841,18 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 				// purpose
 
 				// rectangle of selection
+				if (!isShowing())
+					return;
 				Point location = getLocationOnScreen();
-				Point pStart = new Point(pointBegin.x < pointEnd.x ? pointBegin.x : pointEnd.x, pointBegin.y < pointEnd.y ? pointBegin.y
-						: pointEnd.y);
+				Point pStart = new Point(pointBegin.x < pointEnd.x ? pointBegin.x : pointEnd.x, pointBegin.y < pointEnd.y ? pointBegin.y : pointEnd.y);
 				int w = (pStart.x == pointBegin.x ? pointEnd.x - pointBegin.x : pointBegin.x - pointEnd.x);
 				int h = (pStart.y == pointBegin.y ? pointEnd.y - pointBegin.y : pointBegin.y - pointEnd.y);
 				selectionRectangle.setBounds(pStart.x - location.x, pStart.y - location.y, w, h);
 
 				// add selected plugins in the list
 				for (PluginDescriptorButton pdb : listInstalledPlugins) {
+					if (!pdb.isVisible())
+						return;
 					Rectangle bounds = pdb.getBounds();
 					bounds.x = pdb.getLocationOnScreen().x - location.x;
 					bounds.y = pdb.getLocationOnScreen().y - location.y;
@@ -878,15 +874,19 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 		}
 
 		@Override
-		public void paint(Graphics g) {
+		public void paintComponent(Graphics g) {
 			super.paint(g);
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			if (lastEvent != null) {
 				// DRAW THE SELECTED PLUGINS IN
 				// TRANSPARENT
+				if (!isShowing())
+					return;
 				Point actual = getLocationOnScreen();
 				for (PluginDescriptorButton pdb : new ArrayList<PluginDescriptorButton>(_selectedPlugins)) {
+					if (!pdb.isVisible())
+						continue;
 					Point objectLocation = pdb.getLocationOnScreen();
 					int w = pdb.imgRenderer.getWidth();
 					int h = pdb.imgRenderer.getHeight();
@@ -910,42 +910,44 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			if (lastEvent != null) {
-				Point pW = panelWorkspace.getLocationOnScreen();
-				Point pE = e.getLocationOnScreen();
-				// tests if mouse release is in the panelWorkspace
-				if (pE.x >= pW.x && pE.x <= pW.x + panelWorkspace.getWidth() && pE.y >= pW.y && pE.y <= pE.y + panelWorkspace.getHeight()) {
-					// if null, ask for a band creation
-					if (currentBand == null) {
-						if (currentWorkspace.getName().equals("sys") || currentWorkspace.getName().equals("sys.xml"))
-							MessageDialog.showDialog("System file", "This file should not be modified. It is shown as an example only.");
-						else {
-							String response = JOptionPane.showInputDialog(Icy.getMainInterface().getMainFrame(),
-									"Enter the name of the new band: ", "Band Creation",
-									JOptionPane.QUESTION_MESSAGE);
-							if (response != null) {
-								currentWorkspace.addBand(currentWorkspace.getName(), response);
-								currentBand = currentWorkspace.findBand(currentWorkspace.getName(), response);
-							}
-						}
-					}
-					// if still null, do nothing
-					if (currentBand != null) {
-						for (PluginDescriptorButton pdb : new ArrayList<PluginDescriptorButton>(_selectedPlugins)) {
-							String className = pdb.pd.getClassName();
-							if (currentBand != null && currentBand.findItem(className) == null) {
-								currentBand.addItem(className);
-								for (ItemDefinition itd : currentBand.getItems()) {
-									if (itd.getClassName() == className)
-										itd.setPriority(RibbonElementPriority.MEDIUM);
+				if (panelWorkspace != null && panelWorkspace.isVisible()) {
+
+					Point pW = panelWorkspace.getLocationOnScreen();
+					Point pE = e.getLocationOnScreen();
+					// tests if mouse release is in the panelWorkspace
+					if (pE.x >= pW.x && pE.x <= pW.x + panelWorkspace.getWidth() && pE.y >= pW.y && pE.y <= pE.y + panelWorkspace.getHeight()) {
+						// if null, ask for a band creation
+						if (currentBand == null) {
+							if (currentWorkspace.getName().equals("sys") || currentWorkspace.getName().equals("sys.xml"))
+								MessageDialog.showDialog("System file", "This file should not be modified. It is shown as an example only.");
+							else {
+								String response = JOptionPane.showInputDialog(Icy.getMainInterface().getMainFrame(), "Enter the name of the new band: ",
+										"Band Creation", JOptionPane.QUESTION_MESSAGE);
+								if (response != null) {
+									currentWorkspace.addBand(currentWorkspace.getName(), response);
+									currentBand = currentWorkspace.findBand(currentWorkspace.getName(), response);
 								}
 							}
 						}
-						currentWorkspace.save();
-						reloadWorkspace();
+						// if still null, do nothing
+						if (currentBand != null) {
+							for (PluginDescriptorButton pdb : new ArrayList<PluginDescriptorButton>(_selectedPlugins)) {
+								String className = pdb.pd.getClassName();
+								if (currentBand != null && currentBand.findItem(className) == null) {
+									currentBand.addItem(className);
+									for (ItemDefinition itd : currentBand.getItems()) {
+										if (itd.getClassName() == className)
+											itd.setPriority(RibbonElementPriority.MEDIUM);
+									}
+								}
+							}
+							currentWorkspace.save();
+							reloadWorkspace();
+						}
+						_selectedPlugins.clear();
 					}
-					_selectedPlugins.clear();
+					mainPanel.repaint();
 				}
-				mainPanel.repaint();
 				currentBand = null;
 			}
 		}
@@ -994,11 +996,10 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 		}
 
 		@Override
-		public void paint(Graphics g) {
+		public void paintComponent(Graphics g) {
 			// test if preferred size already set
 			if (!preferredSizeSet) {
-				setPreferredSize(new Dimension(g.getFontMetrics().charsWidth(minNamePlugin.toCharArray(), 0, minNamePlugin.length()) + 26,
-						40));
+				setPreferredSize(new Dimension(g.getFontMetrics().charsWidth(minNamePlugin.toCharArray(), 0, minNamePlugin.length()) + 26, 40));
 				preferredSizeSet = true;
 			}
 
@@ -1034,8 +1035,8 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 			gb.setPaint(defaultPaint);
 			gb.setColor(foreground);
 			gb.drawRoundRect(1, 1, w - 2, h - 2, 10, 10);
-			gb.drawString(text, 10 + w / 2 - gb.getFontMetrics().charsWidth(text.toCharArray(), 0, text.length()) / 2, h / 2
-					+ gb.getFontMetrics().getHeight() / 2);
+			gb.drawString(text, 10 + w / 2 - gb.getFontMetrics().charsWidth(text.toCharArray(), 0, text.length()) / 2, h / 2 + gb.getFontMetrics().getHeight()
+					/ 2);
 			gb.drawImage(pd.getIconAsImage(), 5, 5, h - 10, h - 10, null);
 			g.drawImage(imgRenderer, 0, 0, w, h, null);
 			gb.dispose();
@@ -1282,9 +1283,8 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 				// Create popup menu
 				popup = new TitledPopupMenu("Plugin: " + className.substring(className.lastIndexOf(".") + 1));
 				titleUnderline = BorderFactory.createMatteBorder(1, 0, 0, 0, popup.getForeground());
-				labelBorder = BorderFactory.createTitledBorder(titleUnderline, popup.getLabel(), TitledBorder.CENTER,
-						TitledBorder.ABOVE_TOP, ppp.getFont().deriveFont(Font.BOLD),
-						popup.getForeground());
+				labelBorder = BorderFactory.createTitledBorder(titleUnderline, popup.getLabel(), TitledBorder.CENTER, TitledBorder.ABOVE_TOP, ppp.getFont()
+						.deriveFont(Font.BOLD), popup.getForeground());
 				popup.setBorder(BorderFactory.createCompoundBorder(popup.getBorder(), labelBorder));
 				popup.setLocation(e.getLocationOnScreen());
 
@@ -1355,9 +1355,8 @@ public class WorkspaceEditorPlugin extends PluginActionable {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if (currentWorkspace.getName().contentEquals("sys")) {
-							MessageDialog
-									.showDialog("Cannot be deleted",
-											"The bands of this workspace cannot be deleted. The only possible action is the removal of plugins from band \"new\".");
+							MessageDialog.showDialog("Cannot be deleted",
+									"The bands of this workspace cannot be deleted. The only possible action is the removal of plugins from band \"new\".");
 							return;
 						}
 						if (ConfirmDialog.confirm("Band deletion", "Are you sure you want to delete this band?")) {
